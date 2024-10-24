@@ -77,9 +77,7 @@ class QAController extends Controller
                     'answer' => $answer
                 ], 201);
             } catch (\Exception $e) {
-                response()->json([
-                    'message' => $e->getMessage()
-                ], 500);
+                \Log::error('Error connecting OpenAI api: ' . $e->getMessage());
             }
         } else {
 
