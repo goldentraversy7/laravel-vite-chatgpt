@@ -55,7 +55,11 @@ class QAController extends Controller
             'msg_time' => now(),
         ]);
 
-        broadcast(new QuestionCreated($question))->toOthers();
+        try {
+            broadcast(new QuestionCreated($question))->toOthers();
+        } catch (\Exception $e) {
+            \Log::error('Error broadcasting QuestionCreated event: ' . $e->getMessage());
+        }
 
         if (true) { // when gpt replys
             try {
@@ -74,7 +78,7 @@ class QAController extends Controller
                 ], 201);
             } catch (\Exception $e) {
                 response()->json([
-                    'message' => 'QA failed'
+                    'message' => $e->getMessage()
                 ], 500);
             }
         } else {
